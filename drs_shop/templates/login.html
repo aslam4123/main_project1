@@ -17,27 +17,46 @@
             a{
                 margin-left: 48%;
             }
+            .heading{
+                color: red;
+                margin-top: 50px;
+                font-weight: bold;
+                font-size: 30px;
+                text-align: center;
+            }
+            .th{
+                color: brown;
+            }
+            .bgimg{
+                /* width: 500px; */
+                background-image: url(../static/img4.jpg);
+                background-size: 100%;
+            
+            }
             .alert{
                 width: 500px;
                 margin: auto;
             }
+            tr{
+                margin-top: -50px;
+            }
         </style>
     </head>
-    <body>
+    <body class="bgimg">
         <form action="" method="post">
-            <h4>LOGIN</h4>
+        <div class="heading">LOGIN</div>
             {% csrf_token %}
             <table>
                 <tr>
-                    <th>Username</th>
+                    <th class="th">Username</th>
                     <td><input type="text" name="uname" placeholder="Username"></td>
                 </tr>
                 <tr>
-                    <th>Password</th>
+                    <th class="th">Password</th>
                     <td><input type="password" name="pswd" placeholder="Password"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="text-align: center;"> <input type="submit" value="Submit" class="btn btn-primary"></td>
+                    <td colspan="2" style="text-align: center;"> <input type="submit" value="Submit" class="btn btn-warning"></td>
                 </tr>
             </table>
             <a href="register">REGISTER</a>
