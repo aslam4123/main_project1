@@ -14,30 +14,68 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">DRS</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="add_prod">Add Products</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="bookings">Bookings</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="shp_logout">Log out</a>
-              </li>    
-            </ul>
-          </div>
-        </div>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">DRS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Top Wear</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Tshirt</a></li>
+            <li><a class="dropdown-item" href="#">Shirt</a></li>
+            <li><a class="dropdown-item" href="#">Jacket</a></li>
+            <li><a class="dropdown-item" href="#">Hoodies</a></li>
+           
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Bottom Wear</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Jeans</a></li>
+            <li><a class="dropdown-item" href="#">Pants</a></li>
+            <li><a class="dropdown-item" href="#">Cargo</a></li>
+            <li><a class="dropdown-item" href="#">shorts</a></li>
+            <li><a class="dropdown-item" href="#">Undergarments</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="add_prod">Add Product</a>
+        </li>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bookings">Bookings</a>
+      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="shp_logout">Logout</a>
+        </li>
+       
+      </ul>
       </nav>
     <h2>Home</h2>
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../static/curosil3.jpg" class="d-block w-100" width="75%" height="400px">
+        </div>
+        <div class="carousel-item">
+          <img src="../static/curosil4.png" class="d-block w-100" width="75%" height="400px">
+        </div>
+        <div class="carousel-item">
+          <img src="../static/curosil2.jpg" class="d-block w-100" width="75%" height="400px">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
     <div class="container">
       <div class="row">
         {% for product in data %}
