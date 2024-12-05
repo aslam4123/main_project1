@@ -42,6 +42,13 @@ def shp_home(req):
     else:
         return redirect(shp_login)
 
+def products(req):
+    if 'drs_shop' in req.session:
+        data=Product.objects.all()
+        return render(req,'shop/Products.html',{'data':data})
+    else:
+        return redirect(shp_login)
+    
 def shp_logout(req):
     req.session.flush()          #delete session
     logout(req)
@@ -125,6 +132,13 @@ def user_home(req):
     if 'user' in req.session:
         data=Product.objects.all()
         return render(req,'user/home.html',{'data':data})
+    else:
+        return redirect(shp_login)
+
+def user_products(req):
+    if 'user' in req.session:
+        data=Product.objects.all()
+        return render(req,'user/user_products.html',{'data':data})
     else:
         return redirect(shp_login)
     
