@@ -10,6 +10,9 @@
       .prod{
         margin-right: 500px;
       }
+      .col-lg-7{
+
+      }
     </style>
 
 
@@ -17,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">drs_Shop</a>
+          <a class="navbar-brand" href="#">DRS</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -40,7 +43,7 @@
         <div class="row">
             {% for i in cart_dtls %}
             <div class="col-lg-5">
-                <img src="{{i.product.img.url}}" alt="" style="display: inline-block; object-fit: contain;" >
+                <img src="{{i.product.img.url}}" alt="" style="display: inline-block;width: 700px;height: 400px; object-fit: contain;" >
               </div>
                 <div class="col-lg-7">
                 <h2>{{i.product.name}}</h2>
