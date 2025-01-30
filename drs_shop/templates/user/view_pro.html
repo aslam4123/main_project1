@@ -8,51 +8,157 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            color: #495057;
+            margin: 0;
+            padding: 0;
         }
+        
+        .navbar {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
         .container {
-            margin-top: 5%;
+            margin-top: 50px;
         }
-        h2, h3 {
-            font-weight: 700;
-        }
-        .col-lg-7 {
-            background-color: #f8f9fa;
-            padding: 20px;
+
+        .product-image {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            display: block;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
-        .btn {
-            background-color: orangered;
-            border-radius: 5px;
-            color: white;
+
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-name {
+            font-size: 2rem;
             font-weight: 700;
-            margin: 5px;
-            padding: 10px 20px;
+            color: #333;
+            margin-bottom: 15px;
         }
-        .btn:hover {
-            color: orangered;
-            background-color: white;
-            border: 1px solid orangered;
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 20px;
         }
-        .size-selector {
+
+        .original-price {
+            font-size: 1.2rem;
+            color: #888;
+            text-decoration: line-through;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: skyblue;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 12px 25px;
+            transition: all 0.3s ease;
             margin-top: 15px;
         }
+
+        .btn:hover {
+            background-color: white;
+            color: grey;
+            border: 1px solid grey;
+            transform: translateY(-2px);
+        }
+
+        .size-selector {
+            margin-top: 20px;
+        }
+
         .size-selector label {
             font-weight: bold;
             margin-right: 10px;
         }
+
+        .reviews-section {
+            margin-top: 50px;
+        }
+
+        .review-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .review-card .review-user {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .review-card .review-text {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        .review-card .review-rating {
+            color: #ffcc00;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+     <!-- Navigation Bar -->
+     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">DRS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../user_home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shp_logout">Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
     <div class="container">
         <div class="row">
             <!-- Product Image Section -->
             <div class="col-lg-5">
-                <img src="{{data.img.url}}" alt="Product Image" style="width: 100%; height: 500px; object-fit: contain; display: block; border: 1px solid #ddd; border-radius: 8px;">
-                <div class="bt text-center">
+                <img src="{{data.img.url}}" alt="Product Image" class="product-image">
+                <div class="text-center">
                     <a class="btn" href="../add_to_cart/{{data.pk}}">ADD TO CART</a>
                     <a class="btn" href="../user_buy1/{{data.pk}}">BUY NOW</a>
                 </div>
@@ -60,24 +166,29 @@
 
             <!-- Product Details Section -->
             <div class="col-lg-7">
-                <h2>{{data.name}}</h2>
-                <s><p>₹{{data.price}}</p></s>
-                <h3 style="color: green;">₹{{data.ofr_price}}</h3>
-                <p>{{data.dis}}</p>
+                <div class="product-card">
+                    <h2 class="product-name">{{data.name}}</h2>
+                    <p class="original-price">₹{{data.price}}</p>
+                    <p class="price">₹{{data.ofr_price}}</p>
+                    <p class="description">{{data.dis}}</p>
 
-                <!-- Size Selector -->
-                <div class="size-selector">
-                    <label for="size">Select Size:</label>
-                    <select id="size" class="form-select w-50">
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                    </select>
+                    <!-- Size Selector -->
+                    <div class="size-selector">
+                        <label for="size">Select Size:</label>
+                        <select id="size" class="form-select w-50">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
+
 </body>
 </html>
+

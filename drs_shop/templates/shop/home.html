@@ -10,6 +10,9 @@
         h2,a{
             text-align: center;
         }
+        .navbar {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
         footer {
             background-color: #333;
             color: white;
@@ -23,50 +26,23 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">DRS</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Home</a>
-        </li>
-        <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Top Wear</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="">Tshirt</a></li>
-            <li><a class="dropdown-item" href="#">Shirt</a></li>
-            <li><a class="dropdown-item" href="#">Jacket</a></li>
-            <li><a class="dropdown-item" href="#">Hoodies</a></li>
-           
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Bottom Wear</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Jeans</a></li>
-            <li><a class="dropdown-item" href="#">Pants</a></li>
-            <li><a class="dropdown-item" href="#">Cargo</a></li>
-            <li><a class="dropdown-item" href="#">shorts</a></li>
-            <li><a class="dropdown-item" href="#">Undergarments</a></li>
-          </ul>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link" href="add_prod">Add Product</a>
-        </li>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="products">Products</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="bookings">Bookings</a>
-      </li>
-        <li class="nav-item">
-          <a class="nav-link" href="shp_logout">Logout</a>
-        </li>
-       
-      </ul>
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">DRS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="add_prod">Add Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="bookings">Bookings</a></li>
+                <li class="nav-item"><a class="nav-link" href="shp_logout">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
