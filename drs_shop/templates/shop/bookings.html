@@ -8,53 +8,128 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #343a40;
         }
         .product-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
             background: #fff;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
         .product-card img {
-            margin-bottom: 10px;
-            border-radius: 5px;
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
-        .product-details {
-            font-size: 16px;
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        .product-card .product-details {
+            padding: 20px;
+            background-color: #fff;
         }
         .product-name {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
         }
-        .product-date {
+        .product-date,
+        .product-user {
             color: #6c757d;
             font-size: 14px;
+        }
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .product-card .btn-view {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .product-card .btn-view:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .product-card .btn-view:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .product-card {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Bookings</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="shp_home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shp_logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1 class="text-center mb-4">Booking Details</h1>
         <div class="row">
             {% for i in buy %}
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="product-card">
-                    <img src="{{i.product.img.url}}" alt="{{i.product.name}}" class="img-fluid" style="width: 100%; height: 300px; object-fit: contain;">
+                    <img src="{{i.product.img.url}}" alt="{{i.product.name}}" class="img-fluid">
                     <div class="product-details">
                         <div class="product-name">{{i.product.name}}</div>
-                        <div>Price: ${{i.price}}</div>
+                        <div class="product-price">${{i.price}}</div>
                         <div class="product-date">Date: {{i.date}}</div>
-                        <div>Booked by: {{i.user.first_name}}</div>
+                        <div class="product-user">Booked by: {{i.user.first_name}}</div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
 </body>
 </html>
+
