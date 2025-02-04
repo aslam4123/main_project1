@@ -170,19 +170,39 @@ def user_buy(req,cid):
     price=cart.product.ofr_price
     buy=Buy.objects.create(user=user,product=product,price=price)
     buy.save()
-    return redirect(view_cart)
+    return redirect(order)
 def user_buy1(req,pid):
      user=User.objects.get(username=req.session['user'])
      product=Product.objects.get(pk=pid)
      price=product.ofr_price
      buy=Buy.objects.create(user=user,product=product,price=price)
      buy.save()
-     return redirect(user_home)
+     return redirect(order)
 
 def user_bookings(req):
     user=User.objects.get(username=req.session['user'])
     buy=Buy.objects.filter(user=user)[::-1]
     return render(req,'user/user_bookings.html',{'buy':buy})
+
+
+
+from django.shortcuts import render, redirect
+from .form import OrderForm
+from .models import Order
+
+def order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('order_success')  # Redirect to success page
+    else:
+        form = OrderForm()
+    
+    return render(request, 'user/product_booking.html', {'form': form})
+
+def order_success(request):
+    return render(request, 'user/order.html')
 
 
 

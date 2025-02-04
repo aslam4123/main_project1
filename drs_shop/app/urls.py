@@ -20,7 +20,7 @@ urlpatterns=[
 
 
     path('register',views.register),
-    path('user_home',views.user_home),
+     path('user_home',views.user_home ,name='user_home'),
     path('view_pro/<pid>',views.view_pro),
     path('user_products',views.user_products),
     path('add_to_cart/<pid>',views.add_to_cart),
@@ -28,7 +28,10 @@ urlpatterns=[
     path('delete_cart/<int:id>/', views.delete_cart, name='delete_cart'),
     path('user_buy/<int:cid>/', views.user_buy, name='user_buy'),
     path('user_buy1/<pid>',views.user_buy1),
-    path('user_bookings',views.user_bookings)
+    path('user_bookings',views.user_bookings),
+    path('order/', views.order, name='order'),
+    path('order/success/', views.order_success, name='order_success'),
+    
     
 
 ]
