@@ -35,6 +35,31 @@ def shp_login(req):
     else:
         return render(req,'login.html')
 
+def shp_login1(req):
+    if 'drs_shop' in req.session:
+        return redirect(shp_home)
+    if 'user' in req.session:
+        return redirect(user_home)
+    if req.method=='POST':
+        uname=req.POST['uname']
+        password=req.POST['pswd']
+        data=authenticate(username=uname,password=password)
+        if data:
+            if data.is_superuser:
+                login(req,data)
+                req.session['drs_shop']=uname   #create session
+                return redirect(shp_home)
+            else:
+                login(req,data)
+                req.session['user']=uname   #create session
+                return redirect(user_home)
+        else:
+            messages.warning(req,'Invalid username or password.')
+            return redirect(shp_login)
+    
+    else:
+        return render(req,'login.html')
+
 def shp_home(req):
     if 'drs_shop' in req.session:
         data=Product.objects.all()
