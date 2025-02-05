@@ -29,7 +29,6 @@
             height: 500px;
             object-fit: contain;
             display: block;
-            border: 1px solid #ddd;
             border-radius: 8px;
             transition: transform 0.3s ease;
         }
@@ -39,10 +38,16 @@
         }
 
         .product-card {
-            background-color: #ffffff;
-            border-radius: 8px;
+            background-color: #fff;
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
         }
 
         .product-name {
@@ -50,10 +55,11 @@
             font-weight: 700;
             color: #333;
             margin-bottom: 15px;
+            letter-spacing: 0.5px;
         }
 
         .price {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: #28a745;
             margin-bottom: 20px;
@@ -80,6 +86,7 @@
             padding: 12px 25px;
             transition: all 0.3s ease;
             margin-top: 15px;
+            width: 100%;
         }
 
         .btn:hover {
@@ -126,11 +133,128 @@
             font-size: 1.1rem;
             margin-top: 10px;
         }
+
+        /* Out of Stock / In Stock Message */
+        .in-stock, .out-of-stock {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .in-stock {
+            color: #28a745;
+        }
+
+        .out-of-stock {
+            color: #dc3545;
+        }
+
+        /* Size Selector */
+        /* Size Selector Container */
+        .size-bar {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #495057;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Label Styling */
+        .size-bar label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* Size Dropdown Styling */
+        .size-select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            color: #495057;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-sizing: border-box;
+            appearance: none; /* Removes default dropdown arrow for custom styles */
+            -webkit-appearance: none; /* Removes default dropdown arrow for Safari */
+            -moz-appearance: none; /* Removes default dropdown arrow for Firefox */
+        }
+
+        /* Custom Arrow Icon */
+        .size-select::after {
+            content: '▼';
+            font-size: 1rem;
+            color: #333;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Focus Effect on Size Dropdown */
+        .size-select:focus {
+            border-color: #28a745;
+            outline: none;
+            box-shadow: 0 0 5px rgba(40, 167, 69, 0.2);
+        }
+
+        /* Hover Effect */
+        .size-select:hover {
+            border-color: #80c8a5;
+            background-color: #f1f5f9;
+        }
+
+        /* Disabled Option Styling */
+        .size-select option:disabled {
+            color: #888;
+        }
+
+        /* Placeholder text style */
+        .size-select option:disabled[selected] {
+            color: #aaa;
+        }
+
+        /* Style for the "No sizes available" option */
+        .size-select option[disabled] {
+            font-style: italic;
+            color: #999;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .size-bar {
+                margin-top: 15px;
+            }
+
+            .size-select {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .product-card {
+                padding: 20px;
+            }
+
+            .product-image {
+                height: 400px;
+            }
+
+            .product-name {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
-     <!-- Navigation Bar -->
-     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">DRS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -152,7 +276,6 @@
         </div>
     </nav>
 
-
     <div class="container">
         <div class="row">
             <!-- Product Image Section -->
@@ -171,24 +294,40 @@
                     <p class="original-price">₹{{data.price}}</p>
                     <p class="price">₹{{data.ofr_price}}</p>
                     <p class="description">{{data.dis}}</p>
-
-                    <!-- Size Selector -->
-                    <div class="size-selector">
-                        <label for="size">Select Size:</label>
-                        <select id="size" class="form-select w-50">
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                        </select>
-                    </div>
+                    
+                    {% if data.is_out_of_stock %}
+                        <p class="out-of-stock">Out of Stock</p>
+                    {% else %}
+                        <p class="in-stock">In Stock: {{ data.quantity }}</p>
+                    {% endif %}
+                    
+                    <form method="POST" id="productForm">
+                        {% csrf_token %}
+                        <div class="size-bar">
+                            <label for="size"><strong>Select Size:</strong></label>
+                            <select name="size" id="size" class="size-select" required>
+                                <option value="" disabled selected>Select your size</option> <!-- Placeholder option -->
+                                {% if sizes %}
+                                    {% for size in sizes %}
+                                        <option value="{{ size.size }}">{{ size.size }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="" disabled>No sizes available</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            
+                    
+                    
+                    
                 </div>
             </div>
         </div>
-
     </div>
-
 </body>
 </html>
 

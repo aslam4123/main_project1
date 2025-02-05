@@ -204,21 +204,9 @@
                     <div class="col-md-8 col-sm-6 product-details">
                         <h2 class="product-title">{{i.product.name}}</h2>
                         <p class="product-price">&#36;{{i.product.price}}</p>
+                        
 
-                        <div class="product-size">
-                            <label for="size-{{i.pk}}">Size:</label>
-                            <select id="size-{{i.pk}}" class="form-select w-50">
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                        </div>
-
-                        <div class="quantity-selector">
-                            <label for="quantity-{{i.pk}}">Quantity:</label>
-                            <input type="number" id="quantity-{{i.pk}}" value="1" min="1">
-                        </div><br>
+                    
 
                         <a href="{% url 'delete_cart' id=i.pk %}" class="btn btn-dark btn-sm">Remove</a>
                         <a href="{% url 'user_buy' cid=i.pk %}" class="btn btn-secondary btn-sm">Buy Now</a>

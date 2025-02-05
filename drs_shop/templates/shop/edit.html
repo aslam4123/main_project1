@@ -126,22 +126,23 @@
                     <label for="ofrprice" class="form-label">Offer Price:</label>
                     <input type="number" class="form-control" placeholder="Enter Offer Price" name="ofr_price" value="{{product.ofr_price}}">
                 </div>
-                
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity:</label>
-                    <input type="number" class="form-control" placeholder="Enter Quantity" name="prd_quantity" value="{{product.quantity}}">
-                </div>
-
-                <div class="mb-3">
-                    <label for="size" class="form-label">Size:</label>
-                    <select class="form-control custom-select" name="prd_size">
-                        <option value="" disabled>Select Size</option>
-                        <option value="Small" {% if product.size == 'Small' %} selected {% endif %}>S</option>
-                        <option value="Medium" {% if product.size == 'Medium' %} selected {% endif %}>M</option>
-                        <option value="Large" {% if product.size == 'Large' %} selected {% endif %}>L</option>
-                        <option value="Extra Large" {% if product.size == 'Extra Large' %} selected {% endif %}>XL</option>
+                    <input type="number" class="form-control" placeholder="Quantity" name="quantity" value="{{product.quantity}}" required>
+                  </div>
+        
+                  <div class="mb-3">
+                    <label for="sizes" class="form-label">Select Sizes:</label>
+                    <select name="sizes" class="form-control" multiple>
+                        {% for size in all_sizes %}
+                            <option value="{{ size.size }}"
+                                    {% if size in selected_sizes %}selected{% endif %}>
+                                {{ size.size }}
+                            </option>
+                        {% endfor %}
                     </select>
-                </div>
+                  </div>
+        
                 
                 <img src="{{product.img.url}}" alt="Product Image" class="img-preview">
                 
@@ -154,7 +155,6 @@
                     <label for="dis" class="form-label">Description:</label>
                     <textarea class="form-control" placeholder="Enter Product Details" name="prd_dis" rows="3">{{product.dis}}</textarea>
                 </div>
-
                 <button type="submit" class="btn btn-primary">UPDATE</button>
             </form>
         </div>

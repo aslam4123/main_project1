@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+class Size(models.Model):
+    size = models.CharField(max_length=10)  # E.g., '6', '7', '8.5', '9', '10'
+
+    def __str__(self):
+        return self.size
 
 class Product(models.Model):
     pro_id=models.TextField()
@@ -9,7 +14,12 @@ class Product(models.Model):
     price=models.IntegerField()
     ofr_price=models.IntegerField()
     img=models.FileField()
-    dis=models.TextField()
+    dis=models.TextField()    
+    sizes = models.ManyToManyField(Size, related_name='Sizes')
+    quantity = models.PositiveIntegerField(default=0)  # New field for stock quantity
+
+    def __str__(self):
+        return self.name
 
 class Cart(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

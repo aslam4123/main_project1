@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import authenticate,login,logout
 from .models import *
 import os
@@ -88,11 +88,27 @@ def add_prod(req):
             ofr_price=req.POST['ofr_price']
             img=req.FILES['img']
             prd_dis=req.POST['prd_dis']
-            data=Product.objects.create(pro_id=prd_id,name=prd_name,price=prd_price,ofr_price=ofr_price,img=img,dis=prd_dis)
-            data.save()
+            sizes = req.POST.getlist('sizes')
+            quantity = int(req.POST['quantity'])  # Fetch quantity from form
+
+            product = Product.objects.create(
+                pro_id=prd_id,
+                name=prd_name,
+                price=prd_price,
+                ofr_price=ofr_price,
+                img=img,
+                dis=prd_dis,
+                quantity=quantity  # Add quantity to the product
+            )
+
+            for size in sizes:
+                size_obj, created = Size.objects.get_or_create(size=size)
+                product.sizes.add(size_obj)
+
             return redirect(add_prod)
         else:
-            return render(req,'shop/add_pro.html')
+            all_sizes = Size.objects.all()
+            return render(req, 'shop/add_pro.html', {'all_sizes': all_sizes})
     else:
         return redirect(shp_login)
     
@@ -105,17 +121,36 @@ def edit_prod(req,pid):
             ofr_price=req.POST['ofr_price']
             prd_dis=req.POST['prd_dis']
             img=req.FILES.get('img')
+            sizes = req.POST.getlist('sizes')  # selected sizes
+            quantity = req.POST['quantity']  # quantity
+
+            # Fetch the product to edit
+            product = get_object_or_404(Product, id=pid)
+
+            # Update product fields
+            product.pro_id = prd_id
+            product.name = prd_name
+            product.price = prd_price
+            product.ofr_price = ofr_price
+            product.dis = prd_dis
+            product.quantity = quantity  # Update quantity
+
+            # Update image if a new one is uploaded
             if img:
-                Product.objects.filter(pk=pid).update(pro_id=prd_id,name=prd_name,price=prd_price,ofr_price=ofr_price,dis=prd_dis)
-                data=Product.objects.get(pk=pid)
-                data.img=img
-                data.save()
-            else:
-                Product.objects.filter(pk=pid).update(pro_id=prd_id,name=prd_name,price=prd_price,ofr_price=ofr_price,dis=prd_dis)
+                product.img = img
+
+            # Update sizes
+            product.sizes.clear()  # Clear existing sizes
+            for size in sizes:
+                size_obj, _ = Size.objects.get_or_create(size=size)
+                product.sizes.add(size_obj)
+
+            product.save()  # Save all changes
             return redirect(shp_home)
         else:
-            data=Product.objects.get(pk=pid)
-            return render(req,'shop/edit.html',{'product':data})
+            all_sizes = Size.objects.all()  # Fetch all available sizes
+            product = get_object_or_404(Product, pk=pid)  # Fetch the product to edit
+            return render(req, 'shop/edit.html', {'product': product, 'all_sizes': all_sizes})
     else:
         return redirect(shp_login)
 def delete_prod(req,pid):
@@ -168,8 +203,12 @@ def user_products(req):
         return redirect(shp_login)
     
 def view_pro(req,pid):
-        data=Product.objects.get(pk=pid)
-        return render(req,'user/view_pro.html',{'data':data})
+    product = get_object_or_404(Product, pk=pid)
+    if 'user' in req.session:
+        return render(req, 'user/view_pro.html', {'data': product, 'sizes': product.sizes.all(), 'show_sizes': True})
+    else:
+        return render(req, 'user/view_pro.html', {'data': product, 'sizes': product.sizes.all(), 'show_sizes': False})
+
 
 def add_to_cart(req,pid):
     prod=Product.objects.get(pk=pid)

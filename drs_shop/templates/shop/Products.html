@@ -96,6 +96,9 @@
             text-decoration: line-through;
             color: #d9534f;
         }
+        .quantity {
+            margin-top: 10px;
+        }
         .offer-price {
             color: #28a745;
             font-size: 1.2rem;
@@ -146,8 +149,11 @@
                 <div class="price-section">
                     <p class="original-price">₹{{product.price}}</p>
                     <h4 class="offer-price">₹{{product.ofr_price}}</h4>
-                </div>
-                <a href="edit_prod/{{product.pk}}" class="btn btn-primary">Edit</a>
+                    <div class="quantity">
+                        <input type="number" id="qty-{{ product.pk }}" class="form-control quantity-input" min="1" value="{{ product.quantity }}">
+                    </div>
+                </div><br>
+                <a href="{% url 'edit_prod' pid=product.id %}" class="btn btn-info">Edit</a>
                 <a href="delete_prod/{{product.pk}}" class="btn btn-dark">Delete</a>
               </div>
             </div>

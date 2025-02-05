@@ -160,17 +160,16 @@
         /* Product Cards */
         .card {
             border: none;
-            border-radius: 12px;
-            background-color: #fff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .card-img-top {
@@ -180,25 +179,26 @@
         }
 
         .card-img-top:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .card-body {
-            padding: 25px;
+            padding: 20px;
             text-align: center;
         }
 
+        /* Title and Description */
         .card-title {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 600;
             color: #333;
             margin-bottom: 10px;
         }
 
         .card-text {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #718096;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         /* Price Section */
@@ -206,20 +206,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .price-section .original-price {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: black;
             margin-right: 10px;
             text-decoration: line-through;
         }
 
         .price-section .discount-price {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            font-weight: bold;
             color: skyblue;
+        }
+
+        /* Stock Message */
+        .stock-message {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f4f4f4;
+            color: #2d3748; 
+            margin-top: 10px;
+            text-align: center;
+            padding: 5px 0;
+            background-color: #d1e7dd;
+            border-radius: 5px;
+            display: inline-block;
+            width: 100%;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .stock-message.in-stock {
+            background-color: #ffffff;
+            color: black; 
+        }
+
+        /* Hover effect */
+        .card:hover .stock-message {
+            background-color: skyblue;
+            color: black;
         }
 
         /* Grid Layout */
@@ -329,32 +356,34 @@
         </div>
     </nav>
 
-    <!-- Products Section -->
-    <div class="container">
-        <h2 class="h2">AVAILABLE PRODUCTS</h2>
-        <BR>
+       <!-- Products Section -->
+<div class="container">
+    <h2 class="h2">AVAILABLE PRODUCTS</h2>
+    <BR>
 
-        <!-- Product Row -->
-        <div class="row">
-            {% for product in data %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <a href="view_pro/{{product.pk}}">
-                    <div class="card">
-                        <img class="card-img-top" src="{{product.img.url}}" alt="Product Image">
-                        <div class="card-body">
-                            <h4 class="card-title" id="h2">{{product.name}}</h4>
-                            <p class="card-text">{{product.dis}}</p>
-                            <div class="price-section">
-                                <s><p class="original-price">&#8377;{{product.price}}</p></s>
-                                <p class="discount-price">&#8377;{{product.ofr_price}}</p>
-                            </div>
+    <!-- Product Row -->
+    <div class="row">
+        {% for product in data %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <a href="view_pro/{{product.pk}}">
+                <div class="card">
+                    <img class="card-img-top" src="{{product.img.url}}" alt="Product Image">
+                    <div class="card-body">
+                        <h4 class="card-title" id="h2">{{product.name}}</h4>
+                        <p class="card-text">{{product.dis}}</p>
+                        <div class="price-section">
+                            <s><p class="original-price">&#8377;{{product.price}}</p></s>
+                            <p class="discount-price">&#8377;{{product.ofr_price}}</p>
                         </div>
+                        <p class="stock-message in-stock">Stock: {{ product.quantity }}</p>
                     </div>
-                </a>
-            </div>
-            {% endfor %}
+                </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
+</div>
+
 </body>
 </html>
 

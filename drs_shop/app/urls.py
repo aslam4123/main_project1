@@ -11,8 +11,8 @@ urlpatterns=[
 
     path('shp_home',views.shp_home),
     path('add_prod/',views.add_prod),
-    path('products',views.products),
-    path('edit_prod/<pid>',views.edit_prod),
+    path('products/',views.products),
+    path('products/edit_prod/<int:pid>/', views.edit_prod, name='edit_prod'),
     path('delete_prod/<pid>',views.delete_prod),
     path('bookings',views.bookings),
 
