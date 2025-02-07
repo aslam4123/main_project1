@@ -9,27 +9,43 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f4f7fa;
+            background-color: #f7f9fc;
             color: #495057;
             margin: 0;
             padding: 0;
         }
         
         .navbar {
+            background-color: #343a40;
             margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
         }
 
+        .navbar .navbar-brand {
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #80c8a5;
+        }
+
         .container {
             margin-top: 50px;
+            max-width: 1200px;
         }
 
         .product-image {
             width: 100%;
-            height: 500px;
-            object-fit: contain;
-            display: block;
+            height: auto;
+            object-fit: cover;
             border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
 
@@ -40,46 +56,58 @@
         .product-card {
             background-color: #fff;
             border-radius: 12px;
-            padding: 30px;
+            padding: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
         }
 
         .product-name {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: #333;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .price-section {
+            margin-bottom: 30px;
+        }
+
+        .offer-price {
+            font-size: 1.8rem;
+            color: #ff6347;
+            font-weight: 600;
+            margin-right: 15px;
         }
 
         .price {
-            font-size: 1.6rem;
-            font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #28a745;
-            margin-bottom: 20px;
+            text-decoration: none;
         }
 
         .original-price {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #888;
             text-decoration: line-through;
             margin-bottom: 20px;
         }
 
         .description {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #6c757d;
-            margin-bottom: 20px;
+            line-height: 1.6;
+            margin-bottom: 25px;
         }
 
         .btn {
-            background-color: skyblue;
+            background-color: #28a745;
             color: white;
             font-weight: bold;
             border-radius: 5px;
@@ -87,24 +115,125 @@
             transition: all 0.3s ease;
             margin-top: 15px;
             width: 100%;
+            text-align: center;
         }
 
         .btn:hover {
-            background-color: white;
-            color: grey;
-            border: 1px solid grey;
+            background-color: #218838;
             transform: translateY(-2px);
         }
 
-        .size-selector {
-            margin-top: 20px;
+                /* Main container style */
+        .custom-size-selector {
+            font-family: 'Arial', sans-serif;
+            margin: 20px 0;
+            position: relative;
+            display: inline-block;
+            width: 100%;
         }
 
-        .size-selector label {
+        /* Label styling */
+        .selector-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
             font-weight: bold;
-            margin-right: 10px;
+            color: #333;
         }
 
+        /* Style for custom select wrapper */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            display: inline-block;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style the original select input (hidden) */
+        .custom-size-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            width: 100%;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Arrow icon */
+        .custom-size-select::-ms-expand {
+            display: none;
+        }
+
+        .custom-select-wrapper::after {
+            content: "▼";
+            font-size: 16px;
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #777;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Hover state for select box */
+        .custom-size-select:hover {
+            border-color: #0056b3;
+        }
+
+        /* Focus state for select box */
+        .custom-size-select:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+        }
+
+        /* Disabled option styling */
+        .custom-size-select:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        /* Select option styling */
+        .custom-size-select option {
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+
+        
+
+        .actions {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .actions .buy-now {
+            font-size: 1.1rem;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .actions .buy-now:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Reviews Section */
         .reviews-section {
             margin-top: 50px;
         }
@@ -134,120 +263,36 @@
             margin-top: 10px;
         }
 
-        /* Out of Stock / In Stock Message */
-        .in-stock, .out-of-stock {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        .in-stock {
-            color: #28a745;
-        }
-
-        .out-of-stock {
-            color: #dc3545;
-        }
-
-        /* Size Selector */
-        /* Size Selector Container */
-        .size-bar {
-            margin-top: 20px;
-            font-size: 1rem;
-            color: #495057;
-            display: flex;
-            flex-direction: column;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        /* Label Styling */
-        .size-bar label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        /* Size Dropdown Styling */
-        .size-select {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
-            font-weight: 500;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background-color: #f8f9fa;
-            color: #495057;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-sizing: border-box;
-            appearance: none; /* Removes default dropdown arrow for custom styles */
-            -webkit-appearance: none; /* Removes default dropdown arrow for Safari */
-            -moz-appearance: none; /* Removes default dropdown arrow for Firefox */
-        }
-
-        /* Custom Arrow Icon */
-        .size-select::after {
-            content: '▼';
-            font-size: 1rem;
-            color: #333;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* Focus Effect on Size Dropdown */
-        .size-select:focus {
-            border-color: #28a745;
-            outline: none;
-            box-shadow: 0 0 5px rgba(40, 167, 69, 0.2);
-        }
-
-        /* Hover Effect */
-        .size-select:hover {
-            border-color: #80c8a5;
-            background-color: #f1f5f9;
-        }
-
-        /* Disabled Option Styling */
-        .size-select option:disabled {
-            color: #888;
-        }
-
-        /* Placeholder text style */
-        .size-select option:disabled[selected] {
-            color: #aaa;
-        }
-
-        /* Style for the "No sizes available" option */
-        .size-select option[disabled] {
-            font-style: italic;
-            color: #999;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .size-bar {
-                margin-top: 15px;
-            }
-
-            .size-select {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Responsive Media Queries */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .product-card {
                 padding: 20px;
             }
 
             .product-image {
-                height: 400px;
+                height: 350px;
             }
 
             .product-name {
                 font-size: 1.8rem;
+            }
+
+            .price {
+                font-size: 1.4rem;
+            }
+
+            .btn {
+                font-size: 1.1rem;
+                padding: 10px 20px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions .buy-now {
+                width: 100%;
+                margin-top: 10px;
             }
         }
     </style>
@@ -262,72 +307,67 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../user_home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shp_logout">Log out</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="../user_home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shp_logout">Log out</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <div class="row">
-            <!-- Product Image Section -->
-            <div class="col-lg-5">
-                <img src="{{data.img.url}}" alt="Product Image" class="product-image">
-                <div class="text-center">
-                    <a class="btn" href="../add_to_cart/{{data.pk}}">ADD TO CART</a>
-                    <a class="btn" href="../user_buy1/{{data.pk}}">BUY NOW</a>
+        <div class="product-card">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="{{ data.img.url }}" alt="{{ data.name }}" class="product-image">
                 </div>
-            </div>
+                <div class="col-lg-6">
+                    <h2 class="product-name">{{ data.name }}</h2>
+                    <div class="price-section">
+                        <span class="offer-price">₹{{ data.price }}</span>
+                        <span class="price">₹{{ data.ofr_price }}</span>
+                    </div>
+                    <p class="description">{{ data.dis }}</p>
 
-            <!-- Product Details Section -->
-            <div class="col-lg-7">
-                <div class="product-card">
-                    <h2 class="product-name">{{data.name}}</h2>
-                    <p class="original-price">₹{{data.price}}</p>
-                    <p class="price">₹{{data.ofr_price}}</p>
-                    <p class="description">{{data.dis}}</p>
-                    
-                    {% if data.is_out_of_stock %}
-                        <p class="out-of-stock">Out of Stock</p>
-                    {% else %}
-                        <p class="in-stock">In Stock: {{ data.quantity }}</p>
-                    {% endif %}
-                    
-                    <form method="POST" id="productForm">
+                    <!-- Form for selecting size and adding to cart -->
+                    <form method="POST" action="{% url 'add_to_cart' pid=data.id %}">
                         {% csrf_token %}
-                        <div class="size-bar">
-                            <label for="size"><strong>Select Size:</strong></label>
-                            <select name="size" id="size" class="size-select" required>
-                                <option value="" disabled selected>Select your size</option> <!-- Placeholder option -->
-                                {% if sizes %}
-                                    {% for size in sizes %}
-                                        <option value="{{ size.size }}">{{ size.size }}</option>
+                        <div class="custom-size-selector">
+                            <label for="size" class="selector-label">Size:</label>
+                            <div class="custom-select-wrapper">
+                                <select name="size" id="size" class="custom-size-select" required>
+                                    <option value="" selected>Select Size</option>
+
+                                    {% for size in data.sizes.all %}
+                                        <option value="{{ size.id }}">{{ size.name }}</option>
                                     {% endfor %}
-                                {% else %}
-                                    <option value="" disabled>No sizes available</option>
-                                {% endif %}
-                            </select>
+                                </select>
+                            </div>
                         </div>
+                        
+                        
+
                         <button type="submit" class="btn">Add to Cart</button>
                     </form>
-                </div>
-            </div>
-            
-                    
-                    
-                    
+
+                    <div class="actions">
+                        <a href="../user_buy1/{{ data.pk }}" class="buy-now">Buy Now</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sizeSelect = document.getElementById('size');
+            const selectWrapper = document.querySelector('.custom-select-wrapper');
+        
+            sizeSelect.addEventListener('change', function() {
+                selectWrapper.classList.add('size-selected');
+            });
+        });
+        
+    </script>
 </body>
 </html>
 

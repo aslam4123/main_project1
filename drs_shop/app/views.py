@@ -4,6 +4,7 @@ from .models import *
 import os
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import HttpResponse,JsonResponse
 
  
 
@@ -201,31 +202,115 @@ def user_products(req):
         return render(req,'user/user_products.html',{'data':data})
     else:
         return redirect(shp_login)
-    
-def view_pro(req,pid):
+
+
+def view_pro(req, pid):
+    # Get the product by its ID
     product = get_object_or_404(Product, pk=pid)
-    if 'user' in req.session:
-        return render(req, 'user/view_pro.html', {'data': product, 'sizes': product.sizes.all(), 'show_sizes': True})
+
+    # Pass the product data to the template
+    return render(req, 'user/view_pro.html', {'data': product})
+
+
+
+def add_to_cart(req, pid):
+    if 'user' not in req.session:
+        return redirect('shp_login')
+
+    # Fetch the product and user
+    product = Product.objects.get(pk=pid)
+    user = User.objects.get(username=req.session['user'])
+
+    # Get the selected size from the POST data
+    size_id = req.POST.get('size')
+    selected_size = Size.objects.get(id=size_id) if size_id else None  # Fetch the size object
+    quantity = int(req.POST.get('quantity', 1))  # Get selected quantity
+
+    if not selected_size:
+        return HttpResponse("Size is required", status=400)
+
+    # Check if the product with the selected size already exists in the cart
+    cart_item, created = Cart.objects.get_or_create(user=user, product=product, size=selected_size)
+
+    if created:
+        # If it's a new cart item, set the total price based on quantity
+        cart_item.quantity = quantity
+        cart_item.total_price = quantity * product.ofr_price  # Set the total price
     else:
-        return render(req, 'user/view_pro.html', {'data': product, 'sizes': product.sizes.all(), 'show_sizes': False})
+        # If the cart item already exists, simply update the quantity and total price
+        cart_item.quantity += quantity  # Increment the existing quantity
+        cart_item.total_price = cart_item.quantity * product.ofr_price  # Recalculate total price
 
+    cart_item.save()
 
-def add_to_cart(req,pid):
-    prod=Product.objects.get(pk=pid)
-    user=User.objects.get(username=req.session['user'])
-    data=Cart.objects.create(user=user,product=prod)
-    data.save()
-    return redirect(view_cart)
+    # Decrease stock after adding to cart (this logic is based on how your stock system is designed)
+    product.quantity -= quantity
+    product.save()
+
+    return redirect('view_cart')
+
 
 def view_cart(req):
-    user=User.objects.get(username=req.session['user'])
-    cart_dtls=Cart.objects.filter(user=user)
-    return render(req,'user/cart.html',{'cart_dtls':cart_dtls})
+    if 'user' not in req.session:  # Ensure user is logged in
+        return redirect('shp_login')
 
-def delete_cart(req,id):
-    cart=Cart.objects.get(pk=id)
-    cart.delete()
-    return redirect(view_cart)
+    user = User.objects.get(username=req.session['user'])
+
+    # Use select_related to fetch related product and size data
+    cart_det = Cart.objects.filter(user=user).select_related('product', 'size')
+
+    # Calculate the total price for each cart item
+    total_price = 0  # To calculate total price of all items in the cart
+    for item in cart_det:
+        item.total_price = item.product.ofr_price * item.quantity  # Calculate total price for each item
+        total_price += item.total_price  # Add it to the grand total
+
+    return render(req, 'user/cart.html', {'cart_det': cart_det, 'total_price': total_price})
+
+
+
+def update_cart(request):
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        new_quantity = int(request.POST.get('new_quantity'))  # Get the new quantity from the form
+
+        try:
+            cart_item = Cart.objects.get(id=item_id, user=request.user)  # Get the cart item for the current user
+            product = cart_item.product  # Get the associated product
+
+            # Check if the new quantity is within stock limits
+            if 1 <= new_quantity <= product.quantity:
+                # Update quantity and recalculate total price
+                cart_item.quantity = new_quantity
+                cart_item.total_price = cart_item.quantity * product.ofr_price  # Recalculate total price
+
+                # Save the updated cart item
+                cart_item.save()
+                messages.success(request, f"Quantity updated to {new_quantity}.")
+            else:
+                messages.error(request, f"Cannot update quantity. Max stock available: {product.quantity}.")
+        except Cart.DoesNotExist:
+            messages.error(request, "Item not found in your cart.")
+        except Product.DoesNotExist:
+            messages.error(request, "Product not found.")
+
+        return redirect('view_cart')  # Redirect back to the cart page
+
+    return redirect('view_cart')  # If not a POST request, redirect back to the cart
+
+
+
+def delete_cart(request, id):
+    cart_item = get_object_or_404(Cart, id=id)
+    product = cart_item.product
+
+    # Restore stock when item is removed
+    product.quantity += cart_item.quantity
+    product.save()
+
+    cart_item.delete()
+    messages.success(request, "Item removed from cart. Stock updated.")
+    return redirect('view_cart')
 
 def user_buy(req,cid):
     user=User.objects.get(username=req.session['user'])
