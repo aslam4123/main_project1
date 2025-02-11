@@ -162,9 +162,27 @@ def delete_prod(req,pid):
     data.delete()
     return redirect(shp_home)
 
-def bookings(req):
-    buy=Buy.objects.all()[::-1]
-    return render(req,'shop/bookings.html',{'buy':buy})
+def bookings(request):
+    # Get all Buy objects with related product and user data
+    buy = Buy.objects.select_related('product', 'user').all().order_by('-date')
+    
+    # Get all Order objects related to the Buy objects (assuming there's a way to link Buy to Order)
+    orders = Order.objects.all()
+
+    # Create combined data
+    combined_data = zip(buy, orders)
+
+    return render(request, 'shop/bookings.html', {'combined_data': combined_data})
+
+    # View to delete a booking
+def delete_bookings(request, order_id):
+    # Fetch the booking (order) object
+    order = get_object_or_404(Order, id=order_id)  # Assuming `Order` is your model
+    order.delete()  # Delete the order from the database
+
+    # Redirect back to the bookings page after deletion
+    return redirect(bookings)  # Replace 'bookings' with the name of your bookings view URL
+
 
 
 

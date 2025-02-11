@@ -6,89 +6,215 @@
     <title>Bookings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
     <style>
+        /* General Body Styling */
         body {
-            background-color: #f1f5f9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9;
+            color: #555;
+            margin: 0;
+            padding: 0;
         }
-        .navbar {
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+
+        /* Navbar Styling */
+        nav.navbar {
+            background-color: #34495e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        .container {
-            max-width: 1200px;
+
+        nav.navbar .navbar-brand {
+            font-weight: 600;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: #ecf0f1;
         }
-        h1 {
+
+        nav.navbar .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            margin-right: 20px;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav.navbar .navbar-nav .nav-link:hover {
+            color: #f39c12;
+        }
+
+        /* Header & Content Styling */
+        h2 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #343a40;
-        }
-        .product-card {
-            background: #fff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 30px;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        .product-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .product-card:hover img {
-            transform: scale(1.05);
-        }
-        .product-card .product-details {
-            padding: 20px;
-            background-color: #fff;
-        }
-        .product-name {
-            font-size: 1.4rem;
-            font-weight: 600;
             color: #333;
-            margin-bottom: 15px;
         }
-        .product-date,
-        .product-user {
-            color: #6c757d;
-            font-size: 14px;
+
+        .content {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px 20px;
         }
-        .product-price {
+
+        /* Search Bar Styling */
+        .search-bar {
+            width: 320px;
+            padding: 14px 22px;
+            border-radius: 40px;
+            border: 1px solid #ddd;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Table Container */
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Table Styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            width: 100%;
+            table-layout: fixed;
+            border-radius: 10px;
+            margin-bottom: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .table th {
+            padding: 20px;
+            text-align: left;
             font-size: 1.2rem;
             font-weight: 600;
-            color: #28a745;
-            margin-bottom: 10px;
+            color: #fff;
+            background-color: #2c3e50;
+            border-bottom: 2px solid #ccc;
         }
-        .product-card .btn-view {
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            padding: 8px 15px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-block;
+
+        /* Existing styles for the table */
+        .table td {
+            padding: 16px;
+            text-align: left;
+            font-size: 1rem;
+            color: #555;
+            background-color: #fff;
+            border-radius: 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            word-wrap: break-word; /* Ensure long words are wrapped */
+            overflow-wrap: break-word; /* Same as word-wrap for modern browsers */
         }
-        .product-card .btn-view:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+
+        /* Limit the width of the email column */
+        .table td:nth-child(6) {
+            max-width: 180px; /* Adjust this value if needed */
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .product-card .btn-view:focus {
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+
+        .table tbody tr:hover {
+            background-color: #f8f8f8;
+            transform: translateY(-5px);
         }
+
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 12px;
+        }
+
+        .status-badge {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: capitalize;
+            color: #fff;
+            display: inline-block;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .status-pending {
+            background-color: #f39c12;
+        }
+
+        .status-confirmed {
+            background-color: #28a745;
+        }
+
+        .status-cancelled {
+            background-color: #e74c3c;
+        }
+
+        .filter-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .filter-container select {
+            padding: 8px 18px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-container select:hover {
+            border-color: #3498db;
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            background-color: #f5f6fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: #34495e;
+            color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .search-bar {
+                width: 100%;
+                margin-top: 15px;
             }
-            .product-card {
-                margin-bottom: 20px;
+            .table th, .table td {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            .product-img {
+                width: 40px;
+                height: 40px;
+            }
+            .status-badge {
+                font-size: 0.9rem;
+                padding: 6px 14px;
             }
         }
     </style>
@@ -111,25 +237,136 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Booking Details</h1>
-        <div class="row">
-            {% for i in buy %}
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="product-card">
-                    <img src="{{i.product.img.url}}" alt="{{i.product.name}}" class="img-fluid">
-                    <div class="product-details">
-                        <div class="product-name">{{i.product.name}}</div>
-                        <div class="product-price">${{i.price}}</div>
-                        <div class="product-date">Date: {{i.date}}</div>
-                        <div class="product-user">Booked by: {{i.user.first_name}}</div>
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Bookings</h2>
+            <input type="text" id="search" class="search-bar" placeholder="Search Bookings...">
+        </div>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-container">
+            <select id="statusFilter">
+                <option value="">Filter by Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Offer Price</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingTable">
+                    {% for buy, order in combined_data %}
+                    <tr>
+                        <td><img src="{{ buy.product.img.url }}" alt="{{ buy.product.name }}" class="product-img"></td>
+                        <td>{{ buy.product.name }}</td>
+                        <td>₹{{ buy.price }}</td>
+                        <td>{{ buy.date }}</td>
+                        <td>{{ order.name }}</td>
+                        <td>{{ order.email }}</td>
+                        <td>{{ order.phone_number }}</td>
+                        <td>{{ order.shipping_address }}</td>
+                        <td>
+                            <span class="status-badge 
+                                {% if order.status == 'Pending' %}status-pending
+                                {% elif order.status == 'Confirmed' %}status-confirmed
+                                {% elif order.status == 'Cancelled' %}status-cancelled
+                                {% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                         <!-- Modal for Detailed View -->
+                        <div class="modal fade" id="bookingModal{{ order.id }}" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="bookingModalLabel">{{ buy.product.name }} - Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Customer Name:</strong> {{ order.name }}</p>
+                                        <p><strong>Email:</strong> {{ order.email }}</p>
+                                        <p><strong>Phone:</strong> {{ order.phone_number }}</p>
+                                        <p><strong>Address:</strong> {{ order.shipping_address }}</p>
+                                        <p><strong>Status:</strong> {{ order.status }}</p>
+                                        <p><strong>Price:</strong> ₹{{ buy.price }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <td>
+                            <!-- Delete Button -->
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ order.id }}">Delete</button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Modal for Deletion Confirmation -->
+                    <div class="modal fade" id="deleteModal{{ order.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Delete Booking</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this booking for "{{ order.name }}"?
+                                </div>
+                                <div class="modal-footer">
+                                    <form method="POST" action="/delete_bookings/{{ order.id }}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
+    <script>
+        // Search Functionality
+        document.getElementById('search').addEventListener('input', function() {
+            let searchValue = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#bookingTable tr');
+
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(searchValue) ? "" : "none";
+            });
+        });
+
+        // Filter by Status
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            let filterValue = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#bookingTable tr');
+
+            rows.forEach(row => {
+                let statusText = row.querySelector('.status-badge').innerText.toLowerCase();
+                row.style.display = statusText.includes(filterValue) || filterValue === "" ? "" : "none";
+            });
+        });
+    </script>
+
 </body>
 </html>
+
+
 
