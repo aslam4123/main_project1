@@ -7,6 +7,7 @@ from .views import (
     CustomPasswordResetCompleteView,
 )
 urlpatterns=[
+    path('', views.main, name='main'),
     path('',views.shp_login, name='shp_login'),
     path('shp_login1/', views.shp_login1, name='shp_login1'),
     path('shp_logout',views.shp_logout),

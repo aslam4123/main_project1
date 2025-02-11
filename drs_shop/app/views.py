@@ -189,6 +189,10 @@ def register(req):
     else:
         return render(req,'user/register.html')
 
+def main(req):
+    data = Product.objects.all()  # Get all products from the database
+    return render(req, 'main.html', {'data': data, 'user': req.user})
+
 def user_home(req):
     if 'user' in req.session:
         data=Product.objects.all()
