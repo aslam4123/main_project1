@@ -54,9 +54,9 @@
         }
 
         .content {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 40px 20px;
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 30px 10px;
         }
 
         /* Search Bar Styling */
@@ -78,12 +78,16 @@
 
         /* Table Container */
         .table-container {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: all 0.3s ease;
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-right: 80%;
+        width: 300%; /* Ensure it takes the full width */
+        max-width: 1650px; /* Optional: You can remove this or adjust based on your layout */
+        margin: 0 auto;
         }
 
         /* Table Styling */
@@ -91,41 +95,42 @@
             border-collapse: separate;
             border-spacing: 0 10px;
             width: 100%;
-            table-layout: fixed;
+            table-layout: auto; /* Make the columns adjust based on content */
             border-radius: 10px;
             margin-bottom: 0;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
+        /* Header Styling */
         .table th {
-            padding: 20px;
+            padding: 20px; /* Increase padding */
             text-align: left;
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1rem; /* Increase font size */
+            font-weight: 400;
             color: #fff;
             background-color: #2c3e50;
             border-bottom: 2px solid #ccc;
         }
 
-        /* Existing styles for the table */
+        /* Cell Styling */
         .table td {
-            padding: 16px;
+            padding: 18px; /* Increase padding */
             text-align: left;
-            font-size: 1rem;
+            font-size: 1rem; /* Increase font size */
             color: #555;
             background-color: #fff;
             border-radius: 10px;
             border-bottom: 1px solid #ddd;
             vertical-align: middle;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            word-wrap: break-word; /* Ensure long words are wrapped */
-            overflow-wrap: break-word; /* Same as word-wrap for modern browsers */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Limit the width of the email column */
         .table td:nth-child(6) {
-            max-width: 180px; /* Adjust this value if needed */
+            max-width: 210px; /* Adjust this value if needed */
             word-wrap: break-word;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -147,7 +152,7 @@
         .status-badge {
             padding: 8px 18px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 500;
             text-transform: capitalize;
             color: #fff;
             display: inline-block;
@@ -204,9 +209,10 @@
                 width: 100%;
                 margin-top: 15px;
             }
+            
             .table th, .table td {
-                padding: 12px;
-                font-size: 0.9rem;
+                padding: 15px; /* Reduce padding on smaller screens */
+                font-size: 1rem;
             }
             .product-img {
                 width: 40px;
@@ -265,6 +271,8 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
+                        <th>Size</th> <!-- New Size Column -->
+                        <th>Quantity</th> <!-- New Quantity Column -->
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -280,6 +288,8 @@
                         <td>{{ order.email }}</td>
                         <td>{{ order.phone_number }}</td>
                         <td>{{ order.shipping_address }}</td>
+                        <td>{{ buy.product.size }}</td> <!-- Display the Size -->
+                        <td>{{ buy.product.quantity }}</td> <!-- Display the Quantity -->
                         <td>
                             <span class="status-badge 
                                 {% if order.status == 'Pending' %}status-pending
@@ -289,31 +299,12 @@
                                 {{ order.status }}
                             </span>
                         </td>
-                         <!-- Modal for Detailed View -->
-                        <div class="modal fade" id="bookingModal{{ order.id }}" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="bookingModalLabel">{{ buy.product.name }} - Details</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p><strong>Customer Name:</strong> {{ order.name }}</p>
-                                        <p><strong>Email:</strong> {{ order.email }}</p>
-                                        <p><strong>Phone:</strong> {{ order.phone_number }}</p>
-                                        <p><strong>Address:</strong> {{ order.shipping_address }}</p>
-                                        <p><strong>Status:</strong> {{ order.status }}</p>
-                                        <p><strong>Price:</strong> ₹{{ buy.price }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <td>
                             <!-- Delete Button -->
                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ order.id }}">Delete</button>
                         </td>
                     </tr>
-                    
+                
                     <!-- Modal for Deletion Confirmation -->
                     <div class="modal fade" id="deleteModal{{ order.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -337,6 +328,7 @@
                     </div>
                     {% endfor %}
                 </tbody>
+                
             </table>
         </div>
     </div>
