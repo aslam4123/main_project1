@@ -45,7 +45,11 @@ urlpatterns=[
     path('delete_cart/<int:id>/', views.delete_cart, name='delete_cart'),
     path('user_buy/<int:cid>/', views.user_buy, name='user_buy'),
     path('view_pro/user_buy1/<pid>',views.user_buy1),
-    path('user_bookings',views.user_bookings),
+
+    path('user_bookings/', views.user_bookings, name='user_bookings'),  # This is your booking page
+    path('user/bookings/delete/<int:booking_id>/', views.delete_booking, name='delete_booking'),  # Delete booking URL
+
+
     path('order/', views.order, name='order'),
     path('order/success/', views.order_success, name='order_success'),
     

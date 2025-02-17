@@ -97,6 +97,23 @@
             background-color: #0056b3;
             transform: translateY(2px);
         }
+
+        .delete-btn {
+            background-color: #e74a3b;
+            color: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(2px);
+        }
     </style>
 </head>
 <body>
@@ -136,8 +153,13 @@
                         <p class="product-description">{{ i.product.dis|truncatewords:30 }}</p>
                         <p><strong>Date:</strong> {{ i.date }}</p>
                         <p class="product-size"><strong>Size:</strong> {{ i.size }}</p>
-                        <p class="product-quantity"><strong>Quantity:</strong> {{ i.product.quantity }}</p>
+                        <p class="product-quantity"><strong>Quantity:</strong> {{ i.quantity }}</p>
                        
+                        <!-- Delete button -->
+                        <form action="{% url 'delete_booking' i.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Delete Booking</button>
+                        </form>
                     </div>
                 </div>
             </div>

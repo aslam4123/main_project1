@@ -235,48 +235,66 @@ def view_pro(req, pid):
 
 
 
+
+from django.db.utils import IntegrityError
+from .models import Product, User, Size, Cart  # Ensure correct model imports
+
 def add_to_cart(req, pid):
     if 'user' not in req.session:
         return redirect('shp_login')
 
-    # Fetch the product and user
-    product = Product.objects.get(pk=pid)
-    user = User.objects.get(username=req.session['user'])
+    try:
+        # Fetch product and user
+        product = Product.objects.get(pk=pid)
+        user = User.objects.get(username=req.session['user'])
 
-    # Get the selected size from the POST data
-    size_id = req.POST.get('size')
-    selected_size = Size.objects.get(id=size_id) if size_id else None  # Fetch the size object
-    quantity = int(req.POST.get('quantity', 1))  # Get selected quantity
+        # Get selected size (even though stock is managed at the product level)
+        size_id = req.POST.get('size')
+        selected_size = Size.objects.get(id=size_id) if size_id else None
 
-    if not selected_size:
-        return HttpResponse("Size is required", status=400)
+        # Get quantity
+        quantity = int(req.POST.get('quantity', 1))
+        if quantity <= 0:
+            return HttpResponse("Quantity must be greater than zero.", status=400)
 
-    # Check if the product with the selected size already exists in the cart
-    cart_item, created = Cart.objects.get_or_create(user=user, product=product, size=selected_size)
+        # Check if the product with the selected size already exists in the cart
+        cart_item, created = Cart.objects.get_or_create(user=user, product=product, size=selected_size)
 
-    if created:
-        # If it's a new cart item, set the total price based on quantity
-        cart_item.quantity = quantity
-        cart_item.total_price = quantity * product.ofr_price  # Set the total price
-    else:
-        # If the cart item already exists, simply update the quantity and total price
-        cart_item.quantity += quantity  # Increment the existing quantity
-        cart_item.total_price = cart_item.quantity * product.ofr_price  # Recalculate total price
+        if created:
+            cart_item.quantity = quantity  # Set quantity for a new cart item
+        else:
+            cart_item.quantity += quantity  # Increase quantity if already in cart
 
-    cart_item.save()
+        # Update total price
+        cart_item.total_price = cart_item.quantity * product.ofr_price  
+        cart_item.save()
 
-    # Decrease stock after adding to cart (this logic is based on how your stock system is designed)
-    product.quantity -= quantity
-    product.save()
+        return redirect('view_cart')
 
-    return redirect('view_cart')
+    except Product.DoesNotExist:
+        return HttpResponse("Product not found.", status=404)
+
+    except Size.DoesNotExist:
+        return HttpResponse("Selected size not found.", status=404)
+
+    except ValueError:
+        return HttpResponse("Invalid quantity value.", status=400)
 
 
-def view_cart(req):
-    if 'user' not in req.session:  # Ensure user is logged in
+
+
+
+
+
+
+
+
+
+def view_cart(request):
+    if 'user' not in request.session:  # Ensure user is logged in
         return redirect('shp_login')
 
-    user = User.objects.get(username=req.session['user'])
+    user = User.objects.get(username=request.session['user'])
 
     # Use select_related to fetch related product and size data
     cart_det = Cart.objects.filter(user=user).select_related('product', 'size')
@@ -287,38 +305,10 @@ def view_cart(req):
         item.total_price = item.product.ofr_price * item.quantity  # Calculate total price for each item
         total_price += item.total_price  # Add it to the grand total
 
-    return render(req, 'user/cart.html', {'cart_det': cart_det, 'total_price': total_price})
+    return render(request, 'user/cart.html', {'cart_det': cart_det, 'total_price': total_price})
 
 
 
-def update_cart(request):
-    if request.method == 'POST':
-        item_id = request.POST.get('item_id')
-        new_quantity = int(request.POST.get('new_quantity'))  # Get the new quantity from the form
-
-        try:
-            cart_item = Cart.objects.get(id=item_id, user=request.user)  # Get the cart item for the current user
-            product = cart_item.product  # Get the associated product
-
-            # Check if the new quantity is within stock limits
-            if 1 <= new_quantity <= product.quantity:
-                # Update quantity and recalculate total price
-                cart_item.quantity = new_quantity
-                cart_item.total_price = cart_item.quantity * product.ofr_price  # Recalculate total price
-
-                # Save the updated cart item
-                cart_item.save()
-                messages.success(request, f"Quantity updated to {new_quantity}.")
-            else:
-                messages.error(request, f"Cannot update quantity. Max stock available: {product.quantity}.")
-        except Cart.DoesNotExist:
-            messages.error(request, "Item not found in your cart.")
-        except Product.DoesNotExist:
-            messages.error(request, "Product not found.")
-
-        return redirect('view_cart')  # Redirect back to the cart page
-
-    return redirect('view_cart')  # If not a POST request, redirect back to the cart
 
 
 
@@ -326,34 +316,169 @@ def delete_cart(request, id):
     cart_item = get_object_or_404(Cart, id=id)
     product = cart_item.product
 
-    # Restore stock when item is removed
-    product.quantity += cart_item.quantity
-    product.save()
+    
 
     cart_item.delete()
     messages.success(request, "Item removed from cart. Stock updated.")
     return redirect('view_cart')
 
-def user_buy(req,cid):
-    user=User.objects.get(username=req.session['user'])
-    cart=Cart.objects.get(pk=cid)
-    product=cart.product
-    price=cart.product.ofr_price
-    buy=Buy.objects.create(user=user,product=product,price=price)
-    buy.save()
-    return redirect(order)
-def user_buy1(req,pid):
-     user=User.objects.get(username=req.session['user'])
-     product=Product.objects.get(pk=pid)
-     price=product.ofr_price
-     buy=Buy.objects.create(user=user,product=product,price=price)
-     buy.save()
-     return redirect(order)
+def update_cart(request):
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        new_quantity = request.POST.get('new_quantity')
 
-def user_bookings(req):
-    user=User.objects.get(username=req.session['user'])
-    buy=Buy.objects.filter(user=user)[::-1]
-    return render(req,'user/user_bookings.html',{'buy':buy})
+        try:
+            # Convert new quantity to integer
+            new_quantity = int(new_quantity)
+
+            # Ensure the quantity is greater than 0
+            if new_quantity <= 0:
+                messages.error(request, "Quantity must be at least 1.")
+                return redirect('view_cart')
+
+            cart_item = Cart.objects.get(id=item_id, user=request.user)
+            product = cart_item.product  # Fetch associated product
+
+            # Check if stock is sufficient
+            if new_quantity > product.quantity:
+                messages.error(request, f"Only {product.quantity} items in stock.")
+                return redirect('view_cart')
+
+            
+            cart_item.quantity = new_quantity
+            cart_item.total_price = cart_item.quantity * product.ofr_price  # Recalculate total price
+            cart_item.save()
+
+            messages.success(request, f"Quantity updated to {new_quantity}.")
+            return redirect('view_cart')
+
+        except ValueError:
+            messages.error(request, "Invalid quantity value.")
+        except Cart.DoesNotExist:
+            messages.error(request, "Item not found in your cart.")
+        except Product.DoesNotExist:
+            messages.error(request, "Product not found.")
+
+    return redirect('view_cart')
+
+
+
+
+
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Cart, Product, Order
+from django.utils import timezone
+
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Buy, Order, Cart, Product
+
+def user_buy(request, cid):
+    cart_item = get_object_or_404(Cart, id=cid, user=request.user)
+    product = cart_item.product
+
+    # Check if stock is available
+    if cart_item.quantity > product.quantity:
+        messages.error(request, f"Not enough stock available for {product.name}! Only {product.quantity} left.")
+        return redirect('view_cart')
+
+    # Reduce stock permanently
+    product.quantity -= cart_item.quantity
+    product.save()
+
+    # Create an Order object
+    order = Order.objects.create(
+        name=request.user.username,  
+        email=request.user.email,    
+        phone_number="1234567890",
+        shipping_address="Default Address",
+        status="Processing",
+        created_at=timezone.now(),
+    )
+
+    # Ensure quantity is not NULL
+    quantity = request.POST.get("quantity")
+    if quantity:
+        quantity = int(quantity)
+    else:
+        quantity = cart_item.quantity  # Default to cart quantity
+
+    # Save the order in `Buy`
+    order = Buy.objects.create(
+        user=request.user,
+        product=product,
+        # size=request.POST.get("size"),
+        quantity=quantity,  # Ensure it's always set
+        price=product.ofr_price * cart_item.quantity,
+        date=timezone.now()
+    )
+
+    # Remove the item from the cart after purchase
+    cart_item.delete()
+
+    messages.success(request, f"Order placed successfully for {product.name}!")
+    return redirect('order')
+
+
+
+from django.contrib import messages
+from django.shortcuts import redirect
+from .models import User, Product, Buy
+
+def user_buy1(req, pid):
+    user = User.objects.get(username=req.session['user'])  # Fetch logged-in user
+    product = Product.objects.get(pk=pid)
+
+    # Extract size and quantity from the request
+    size = req.GET.get('size', 'M')  # Get size from URL parameter, default to 'M' if not provided
+    quantity = int(req.GET.get('quantity', 1))  # Default to 1 if not provided in the URL
+
+    print(f"Selected size: {size}")  # Debugging print
+
+    # Check if there's enough stock available
+    if product.quantity >= quantity:
+        price = product.ofr_price * quantity  # Adjust price based on quantity
+        
+        # Create Buy object with size and quantity
+        buy = Buy.objects.create(user=user, product=product, price=price, size=size, quantity=quantity)
+        buy.save()
+
+        # Decrease stock
+        product.quantity -= quantity
+        product.save()
+
+        return redirect('order')  # Redirect after purchase
+    else:
+        messages.error(req, "Sorry, not enough stock available.")
+        return redirect('view_cart')  # Redirect to view cart if stock is not enough
+
+
+
+from django.shortcuts import render
+from .models import Buy
+
+def user_bookings(request):
+    user = request.user  # Get the currently logged-in user
+
+    # Fetch bookings related to this user
+    bookings = Buy.objects.filter(user=user)  # Correct query
+
+    return render(request, 'user/user_bookings.html', {'buy': bookings})
+
+from django.shortcuts import render, redirect
+from .models import *
+
+def delete_booking(request, booking_id):
+    if request.method == 'POST':
+        booking = Buy.objects.get(id=booking_id)
+        booking.delete()
+        return redirect('user_bookings')  # Redirect back to the user bookings page
+
 
 
 
