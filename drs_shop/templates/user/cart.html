@@ -236,7 +236,7 @@
                                     <label for="new_quantity_{{ item.id }}">Enter Quantity:</label>
                                     <input type="number" id="new_quantity_{{ item.id }}" name="new_quantity" class="form-control" 
                                            min="1" max="{{ item.product.quantity }}" value="{{ item.quantity|default:1 }}">
-                                    <button type="submit" class="btn btn-warning btn-sm mt-2" name="change_qty" value="0">Update Quantity</button>
+                                    <button type="submit" class="btn btn-secondary btn-sm mt-2" name="change_qty" value="0">Update Quantity</button>
                                 </div>
                             </form>
 
@@ -248,8 +248,8 @@
                             {% endif %}
 
                             <div class="d-flex justify-content-center mt-4">
-                                <a href="{% url 'delete_cart' item.id %}" class="btn btn-danger btn-sm me-2">Remove</a>
-                                <a href="{% url 'user_buy' item.id %}" class="btn btn-primary btn-sm">Buy Now</a>
+                                <a href="{% url 'delete_cart' item.id %}" class="btn btn-dark btn-sm me-2">Remove</a>
+                                <a href="{% url 'user_buy' item.id %}" class="btn btn-info btn-sm">Buy Now</a>
                             </div>
                         </div>
                     </div>

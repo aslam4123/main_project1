@@ -21,7 +21,11 @@
             padding: 0;
         }
 
-        /* Navbar Styling */
+        .navbar {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        {% comment %} /* Navbar Styling */
         nav.navbar {
             background-color: #34495e;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -44,7 +48,7 @@
 
         nav.navbar .navbar-nav .nav-link:hover {
             color: #f39c12;
-        }
+        } {% endcomment %}
 
         /* Header & Content Styling */
         h2 {
@@ -235,9 +239,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="shp_home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shp_home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_prod">Add Products</a></li>
                     <li class="nav-item"><a class="nav-link active" href="#">Bookings</a></li>
-                    <li class="nav-item"><a class="nav-link" href="shp_logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shp_logout">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -288,8 +294,8 @@
                         <td>{{ order.email }}</td>
                         <td>{{ order.phone_number }}</td>
                         <td>{{ order.shipping_address }}</td>
-                        <td>{{ buy.product.size }}</td> <!-- Display the Size -->
-                        <td>{{ buy.product.quantity }}</td> <!-- Display the Quantity -->
+                        <td>{{ buy.size }}</td> <!-- Display the Size -->
+                        <td>{{ buy.quantity }}</td> <!-- Display the Quantity -->
                         <td>
                             <span class="status-badge 
                                 {% if order.status == 'Pending' %}status-pending

@@ -160,7 +160,7 @@ def delete_prod(req,pid):
     og_path=url.split('/')[-1]
     os.remove('media/'+og_path)
     data.delete()
-    return redirect(shp_home)
+    return redirect(products)
 
 def bookings(request):
     # Get all Buy objects with related product and user data

@@ -107,6 +107,22 @@
         .container {
             max-width: 1200px;
         }
+        .size-list {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .size-list span {
+            display: inline-block;
+            margin: 3px 5px;
+            padding: 4px 8px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
         @media (max-width: 1024px) {
             .card {
                 margin-bottom: 30px;
@@ -128,10 +144,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="shp_home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shp_home">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="bookings">Bookings</a></li>
-                    <li class="nav-item"><a class="nav-link" href="shp_logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_prod">Add Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bookings">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shp_logout">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -152,6 +169,14 @@
                     <div class="quantity">
                         <input type="number" id="qty-{{ product.pk }}" class="form-control quantity-input" min="1" value="{{ product.quantity }}">
                     </div>
+                </div>
+                <div class="size-list">
+                    <strong>Available Sizes:</strong>
+                    {% for size in product.sizes.all %}
+                        <span>{{ size.size }}</span>
+                    {% empty %}
+                        <span>No sizes available</span>
+                    {% endfor %}
                 </div><br>
                 <a href="{% url 'edit_prod' pid=product.id %}" class="btn btn-info">Edit</a>
                 <a href="delete_prod/{{product.pk}}" class="btn btn-dark">Delete</a>
