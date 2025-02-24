@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -143,7 +144,6 @@
         }
 
         /* Product Page */
-        
         .container {
             padding-top: 60px;
             padding-bottom: 60px;
@@ -157,98 +157,6 @@
             text-align: center;
         }
 
-        /* Product Cards */
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-img-top {
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .card-img-top:hover {
-            transform: scale(1.1);
-        }
-
-        .card-body {
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Title and Description */
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .card-text {
-            font-size: 1.1rem;
-            color: #718096;
-            margin-bottom: 15px;
-        }
-
-        /* Price Section */
-        .price-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .price-section .original-price {
-            font-size: 1.3rem;
-            color: black;
-            margin-right: 10px;
-            text-decoration: line-through;
-        }
-
-        .price-section .discount-price {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: skyblue;
-        }
-
-        /* Stock Message */
-        .stock-message {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f4f4f4;
-            color: #2d3748; 
-            margin-top: 10px;
-            text-align: center;
-            padding: 5px 0;
-            background-color: #d1e7dd;
-            border-radius: 5px;
-            display: inline-block;
-            width: 100%;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .stock-message.in-stock {
-            background-color: #ffffff;
-            color: black; 
-        }
-
-        /* Hover effect */
-        .card:hover .stock-message {
-            background-color: skyblue;
-            color: black;
-        }
-
         /* Grid Layout */
         .row {
             display: flex;
@@ -257,7 +165,9 @@
             justify-content: center;
         }
 
-        .col-lg-3, .col-md-4, .col-sm-6 {
+        .col-lg-3,
+        .col-md-4,
+        .col-sm-6 {
             max-width: 25%;
             min-width: 220px;
             flex: 1;
@@ -281,7 +191,27 @@
                 max-width: 100%;
             }
         }
-        /* Filters */
+
+        /* Footer Section */
+        .footer {
+            background-color: #2d3748;
+            color: #f4f4f4;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+
+        .footer .social-icons a {
+            color: #f4f4f4;
+            margin: 0 15px;
+            font-size: 22px;
+            transition: color 0.3s ease;
+        }
+
+        .footer .social-icons a:hover {
+            color: #38a169;
+        }
+
         .filter-section {
             background-color: #fff;
             padding: 25px;
@@ -289,51 +219,11 @@
             margin-bottom: 30px;
             border-radius: 10px;
         }
-
-        .filter-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .filter-options {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .filter-option {
-            margin-right: 15px;
-            margin-bottom: 10px;
-        }
-
-        .filter-option input {
-            margin-right: 10px;
-        }
-
-        .filter-option label {
-            font-size: 1.1rem;
-        }
-
-        .clear-filters {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            color: #e53e3e;
-            cursor: pointer;
-        }
-
-        .clear-filters:hover {
-            text-decoration: underline;
-        }
-        .h2{
-            color: #2d3748;
-        }
-        #h2{
-            color: #2d3748;
-        }
-
     </style>
 </head>
+
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">DRS</a>
@@ -356,34 +246,73 @@
         </div>
     </nav>
 
-       <!-- Products Section -->
-<div class="container">
-    <h2 class="h2">AVAILABLE PRODUCTS</h2>
-    <BR>
+    <!-- Products Section -->
+    <div class="container">
+        <h2>AVAILABLE PRODUCTS</h2>
+        <br>
 
-    <!-- Product Row -->
-    <div class="row">
-        {% for product in data %}
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <a href="view_pro/{{product.pk}}">
-                <div class="card">
-                    <img class="card-img-top" src="{{product.img.url}}" alt="Product Image">
-                    <div class="card-body">
-                        <h4 class="card-title" id="h2">{{product.name}}</h4>
-                        <p class="card-text">{{product.dis}}</p>
-                        <div class="price-section">
-                            <s><p class="original-price">&#8377;{{product.price}}</p></s>
-                            <p class="discount-price">&#8377;{{product.ofr_price}}</p>
+        <!-- Product Row -->
+        <div class="row">
+            {% for product in data %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <a href="view_pro/{{product.pk}}">
+                    <div class="card">
+                        <img class="card-img-top" src="{{product.img.url}}" alt="Product Image">
+                        <div class="card-body">
+                            <h4 class="card-title">{{product.name}}</h4>
+                            <p class="card-text">{{product.dis}}</p>
+                            <div class="price-section">
+                                <s><p class="original-price">&#8377;{{product.price}}</p></s>
+                                <p class="discount-price">&#8377;{{product.ofr_price}}</p>
+                            </div>
+                            <p class="stock-message in-stock">Stock: {{ product.quantity }}</p>
                         </div>
-                        <p class="stock-message in-stock">Stock: {{ product.quantity }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>About Us</h4>
+                    <p>We are a leading online shopping platform providing quality products at the best prices. Enjoy a seamless shopping experience with fast delivery and secure payments.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="../user_home">Home</a></li>
+                        <li><a href="view_cart">Cart</a></li>
+                        <li><a href="shp_logout">Log out</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4>Contact Us</h4>
+                    <p><strong>Email:</strong> support@drs.com</p>
+                    <p><strong>Phone:</strong> +1 800 123 4567</p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-square"></i></a>
+                        <a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
-            </a>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <p>&copy; 2025 DRS Online Shopping. All rights reserved.</p>
+                </div>
+            </div>
         </div>
-        {% endfor %}
-    </div>
-</div>
+    </footer>
 
 </body>
-</html>
 
+</html>
