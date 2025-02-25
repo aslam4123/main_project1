@@ -512,17 +512,13 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 
 
-from django.shortcuts import render, redirect
-from .form import OrderForm
-from .models import Order
-
 import razorpay
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .form import OrderForm
 
 # Set up Razorpay client
-razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET ))
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 def order(request):
     if request.method == 'POST':
@@ -532,7 +528,7 @@ def order(request):
             
             # Create a Razorpay order
             razorpay_order = razorpay_client.order.create({
-                'amount': 'items.product.ofr_price',  # Amount in paise (₹50.00), Razorpay expects the amount in paise
+                'amount': 5000,  # Amount in paise (₹50.00), Razorpay expects the amount in paise
                 'currency': 'INR',
                 'payment_capture': 1,
             })
@@ -552,6 +548,8 @@ def order(request):
 
     return render(request, 'user/product_booking.html', {'form': form})
 
+
+
 def order_success(request):
     return render(request, 'user/order.html')
 
@@ -568,7 +566,7 @@ from .models import Order
 from .form import OrderForm
 
 # Initialize Razorpay client
-razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET ))
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 def verify_payment(request):
     if request.method == 'POST':

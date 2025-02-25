@@ -3,111 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
-    <style>
-        /* Reset some default styles */
-        body, h1, p {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background-color: #f4f7fb;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .payment-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #4CAF50;
-            text-align: center;
-        }
-
-        .description {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .button-container {
-            text-align: center;
-        }
-
-        #pay-button {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #pay-button:hover {
-            background-color: #45a049;
-        }
-
-        /* Input and hidden fields (styled for clean background) */
-        input[type="hidden"] {
-            display: none;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
+    <title>Document</title>
 </head>
 <body>
+    {% load static %}
 
-<div class="payment-container">
-    <h1>Complete Your Payment</h1>
-    <p class="description">You're just one step away from completing your payment for the product. Click the button below to pay securely.</p>
+<form action="/order/verify_payment/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+    <button type="submit" id="pay-button">Pay Now</button>
+</form>
 
-    <form action="/order/verify_payment/" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
-        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
-        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
-
-        <div class="button-container">
-            <button type="submit" id="pay-button">Pay Now</button>
-        </div>
-    </form>
-</div>
-
-<!-- Razorpay Checkout Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     var options = {
-        "key": "{{ razorpay_key }}",  // Your Razorpay key
+        "key": "{{ razorpay_key }}",  // The key you received from Razorpay
         "amount": "{{ razorpay_amount }}",  // Amount in paise (₹50.00)
         "currency": "INR",
-        "name": "DRS SHOP",  // Your business name
+        "name": "Your Store Name",  // Your business name
         "description": "Product Description",
         "image": "URL_to_your_logo",  // Optional logo
-        "order_id": "{{ razorpay_order_id }}",  // Order ID from backend
+        "order_id": "{{ razorpay_order_id }}",  // Order ID created in the backend
         "handler": function (response) {
-            // Pass payment details to the form
+            // Send the payment details back to the backend for verification
             document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
             document.getElementById("razorpay_signature").value = response.razorpay_signature;
             document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
@@ -126,10 +46,6 @@
         e.preventDefault();
     }
 </script>
-
-<div class="footer">
-    <p>Secure Payment powered by Razorpay</p>
-</div>
 
 </body>
 </html>
