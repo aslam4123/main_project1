@@ -472,12 +472,24 @@ def user_bookings(request):
 
 from django.shortcuts import render, redirect
 from .models import *
-
 def delete_booking(request, booking_id):
     if request.method == 'POST':
+        # Get the booking (order)
         booking = Buy.objects.get(id=booking_id)
+        
+        # Access the product associated with the booking and restock it
+        product = booking.product  # assuming Buy model has a foreign key to Product model
+        
+        # Increase the product stock by the quantity in the booking
+        product.quantity += booking.quantity  # assuming Buy has a quantity field
+        product.save()
+
+        # Delete the booking
         booking.delete()
-        return redirect('user_bookings')  # Redirect back to the user bookings page
+
+        # Redirect to the user's bookings page
+        return redirect('user_bookings')
+
 
 
 
@@ -596,3 +608,23 @@ def verify_payment(request):
             return render(request, 'user/order_failed.html')
 
     return JsonResponse({'status': 'failed'}, status=400)
+
+# Your view
+from django.shortcuts import render
+
+def order_summary(request):
+    # Assuming you have a Razorpay order amount in paise
+    razorpay_amount_in_paise = 10000  # For example, ₹100.00 in paise
+
+    # Convert amount to INR by dividing by 100
+    razorpay_amount_in_inr = razorpay_amount_in_paise / 100
+
+    context = {
+        'razorpay_order_id': 'your_order_id',
+        'razorpay_key': 'your_razorpay_key',
+        'razorpay_amount': razorpay_amount_in_paise,  # Pass the amount in paise for Razorpay
+        'razorpay_amount_inr': razorpay_amount_in_inr,  # Pass the amount in INR for display
+        # other context variables...
+    }
+
+    return render(request, 'user/payment.html', context)

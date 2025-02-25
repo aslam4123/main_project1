@@ -3,49 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .payment-container {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .payment-container:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #777;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 100px;
+            margin: 20px 0;
+        }
+        .product-details {
+            text-align: left;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .product-details span {
+            font-weight: bold;
+        }
+        .payment-btn {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .payment-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .payment-btn:active {
+            background-color: #3c8e44;
+            transform: translateY(0);
+        }
+        .payment-btn:focus {
+            outline: none;
+        }
+        .footer {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    {% load static %}
+  
+    <div class="payment-container">
+        <img src="../../static/drs.webp" alt="Logo" class="logo">
+        <h1>Complete Your Payment</h1>
+        <p>Order Description</p>
 
-<form action="/order/verify_payment/" method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
-    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
-    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
-    <button type="submit" id="pay-button">Pay Now</button>
-</form>
+        <!-- Product Details Section -->
+        <div class="product-details">
+            <p><span>Product Name:</span></p>
+            <p><span>Description:</span> This is an amazing product that you'll love.</p>
+            <p><span>Total Price:</span> ₹{{ razorpay_amount|floatformat:2 }}</p>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    var options = {
-        "key": "{{ razorpay_key }}",  // The key you received from Razorpay
-        "amount": "{{ razorpay_amount }}",  // Amount in paise (₹50.00)
-        "currency": "INR",
-        "name": "Your Store Name",  // Your business name
-        "description": "Product Description",
-        "image": "URL_to_your_logo",  // Optional logo
-        "order_id": "{{ razorpay_order_id }}",  // Order ID created in the backend
-        "handler": function (response) {
-            // Send the payment details back to the backend for verification
-            document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
-            document.getElementById("razorpay_signature").value = response.razorpay_signature;
-            document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
-            document.forms[0].submit();  // Submit the form
-        },
-        "prefill": {
-            "name": "Your Name",
-            "email": "youremail@example.com",
-            "contact": "1234567890"
+        </div>
+
+        <!-- Payment Form -->
+        <form action="/order/verify_payment/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
+            <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+            <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+            <button type="submit" id="pay-button" class="payment-btn">Pay Now</button>
+        </form>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",  // Your Razorpay Key
+            "amount": "{{ razorpay_amount }}",  // The total amount in paise (converted from INR)
+            "currency": "INR",
+            "name": "DRS SHOP",
+            "description": "Order Description",
+            "image": "URL_to_your_logo",  // Your logo URL
+            "order_id": "{{ razorpay_order_id }}",  // Razorpay order ID
+            "handler": function (response) {
+                // Send the payment details back to the backend for verification
+                document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
+                document.getElementById("razorpay_signature").value = response.razorpay_signature;
+                document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
+                document.forms[0].submit();  // Submit the form
+            },
+            "prefill": {
+                "name": "Your Name",
+                "email": "youremail@example.com",
+                "contact": "1234567890"
+            }
+        };
+    
+        var rzp1 = new Razorpay(options);
+        document.getElementById('pay-button').onclick = function(e) {
+            rzp1.open();
+            e.preventDefault();
         }
-    };
-
-    var rzp1 = new Razorpay(options);
-    document.getElementById('pay-button').onclick = function(e) {
-        rzp1.open();
-        e.preventDefault();
-    }
-</script>
-
+    </script>
+    
 </body>
 </html>
