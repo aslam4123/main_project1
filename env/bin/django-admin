@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/acer/Desktop/aslam/main project/main_project1/env/bin/python3" "$0" "$@"
-' '''
+#!/home/novavi/Desktop/aslam/main_project1/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

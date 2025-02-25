@@ -52,6 +52,7 @@ urlpatterns=[
 
     path('order/', views.order, name='order'),
     path('order/success/', views.order_success, name='order_success'),
+    path('order/verify_payment/', views.verify_payment, name='verify_payment'),
     
     
 

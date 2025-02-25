@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -136,3 +137,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'muhmdaslam189@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'iqqesdyzxmturwrj'  # Replace with your app password
 DEFAULT_FROM_EMAIL = 'Your App <your-email@example.com>'
+
+
+
+
+
+RAZORPAY_KEY_ID = "rzp_test_fGXBbOpWsXJ5K7"
+RAZORPAY_KEY_SECRET = "8r97uL39w4etyjunuKYO4tpE"

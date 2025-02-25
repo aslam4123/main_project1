@@ -516,15 +516,40 @@ from django.shortcuts import render, redirect
 from .form import OrderForm
 from .models import Order
 
+import razorpay
+from django.shortcuts import render, redirect
+from django.conf import settings
+from .form import OrderForm
+
+# Set up Razorpay client
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET ))
+
 def order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('order_success')  # Redirect to success page
+            order = form.save()  # Save the order details first
+            
+            # Create a Razorpay order
+            razorpay_order = razorpay_client.order.create({
+                'amount': 'items.product.ofr_price',  # Amount in paise (₹50.00), Razorpay expects the amount in paise
+                'currency': 'INR',
+                'payment_capture': 1,
+            })
+            
+            # Store Razorpay order ID in the database
+            order.razorpay_order_id = razorpay_order['id']
+            order.save()
+
+            # Send the order details to the template for the payment page
+            return render(request, 'user/payment.html', {
+                'razorpay_order_id': razorpay_order['id'],
+                'razorpay_amount': razorpay_order['amount'],
+                'razorpay_key': settings.RAZORPAY_KEY_ID,  # Provide the Razorpay key in the template
+            })
     else:
         form = OrderForm()
-    
+
     return render(request, 'user/product_booking.html', {'form': form})
 
 def order_success(request):
@@ -535,3 +560,41 @@ def order_success(request):
 
 
 
+import razorpay
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.conf import settings
+from .models import Order
+from .form import OrderForm
+
+# Initialize Razorpay client
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET ))
+
+def verify_payment(request):
+    if request.method == 'POST':
+        razorpay_order_id = request.POST['razorpay_order_id']
+        razorpay_payment_id = request.POST['razorpay_payment_id']
+        razorpay_signature = request.POST['razorpay_signature']
+
+        # Verify the signature
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+
+        try:
+            # Verify the payment signature
+            razorpay_client.utility.verify_payment_signature(params_dict)
+
+            # Payment is verified, update the order status in your database
+            order = Order.objects.get(razorpay_order_id=razorpay_order_id)
+            order.payment_status = 'Success'
+            order.save()
+
+            return render(request, 'user/order_success.html', {'order': order})
+
+        except razorpay.errors.SignatureVerificationError:
+            return render(request, 'user/order_failed.html')
+
+    return JsonResponse({'status': 'failed'}, status=400)
