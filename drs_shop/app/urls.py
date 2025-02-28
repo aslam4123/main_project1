@@ -51,8 +51,9 @@ urlpatterns=[
 
 
     path('order/', views.order, name='order'),
-    path('order/success/', views.order_success, name='order_success'),
-    path('order/verify_payment/', views.verify_payment, name='verify_payment'),
+    path('order_success/', views.order_success, name='order_success'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    path('payment/<int:order_id>/', views.payment, name='payment'),
     
     
 
