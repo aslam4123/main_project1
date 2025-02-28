@@ -14,7 +14,7 @@
             margin: 0;
             padding: 0;
         }
-        
+
         .navbar {
             background-color: #343a40;
             margin-bottom: 20px;
@@ -89,7 +89,6 @@
             font-size: 1.4rem;
             font-weight: 700;
             color: #28a745;
-            text-decoration: none;
         }
 
         .original-price {
@@ -123,7 +122,6 @@
             transform: translateY(-2px);
         }
 
-                /* Main container style */
         .custom-size-selector {
             font-family: 'Arial', sans-serif;
             margin: 20px 0;
@@ -132,7 +130,6 @@
             width: 100%;
         }
 
-        /* Label styling */
         .selector-label {
             display: block;
             margin-bottom: 8px;
@@ -141,21 +138,16 @@
             color: #333;
         }
 
-        /* Style for custom select wrapper */
         .custom-select-wrapper {
             position: relative;
             width: 100%;
             display: inline-block;
             border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* Style the original select input (hidden) */
         .custom-size-select {
             appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
             padding: 12px 24px;
             font-size: 16px;
             width: 100%;
@@ -168,48 +160,6 @@
             position: relative;
             z-index: 1;
         }
-
-        /* Arrow icon */
-        .custom-size-select::-ms-expand {
-            display: none;
-        }
-
-        .custom-select-wrapper::after {
-            content: "▼";
-            font-size: 16px;
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            color: #777;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        /* Hover state for select box */
-        .custom-size-select:hover {
-            border-color: #0056b3;
-        }
-
-        /* Focus state for select box */
-        .custom-size-select:focus {
-            border-color: #0056b3;
-            box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
-        }
-
-        /* Disabled option styling */
-        .custom-size-select:disabled {
-            background: #e9ecef;
-            cursor: not-allowed;
-        }
-
-        /* Select option styling */
-        .custom-size-select option {
-            padding: 12px 24px;
-            font-size: 16px;
-        }
-
-        
 
         .actions {
             margin-top: 25px;
@@ -233,68 +183,6 @@
             transform: translateY(-2px);
         }
 
-        /* Reviews Section */
-        .reviews-section {
-            margin-top: 50px;
-        }
-
-        .review-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .review-card .review-user {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .review-card .review-text {
-            font-size: 1rem;
-            color: #6c757d;
-            margin-top: 10px;
-        }
-
-        .review-card .review-rating {
-            color: #ffcc00;
-            font-size: 1.1rem;
-            margin-top: 10px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .product-card {
-                padding: 20px;
-            }
-
-            .product-image {
-                height: 350px;
-            }
-
-            .product-name {
-                font-size: 1.8rem;
-            }
-
-            .price {
-                font-size: 1.4rem;
-            }
-
-            .btn {
-                font-size: 1.1rem;
-                padding: 10px 20px;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            .actions .buy-now {
-                width: 100%;
-                margin-top: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -329,64 +217,33 @@
                     </div>
                     <p class="description">{{ data.dis }}</p>
 
-                    <!-- Form for selecting size and adding to cart -->
                     <form method="POST" action="{% url 'add_to_cart' pid=data.id %}">
                         {% csrf_token %}
                         <div class="custom-size-selector">
                             <label for="size" class="selector-label">Size:</label>
-                            <div class="custom-select-wrapper">
-                                <select name="size" id="size" class="custom-size-select" required>
-                                    <option value="" selected>Select Size</option>
-
-                                    {% for size in data.sizes.all %}
-                                        <option value="{{ size.id }}">{{ size.size }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            <select name="size" id="size" class="custom-size-select" required>
+                                <option value="" selected>Select Size</option>
+                                {% for size in data.sizes.all %}
+                                    <option value="{{ size.id }}">{{ size.size }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        
-                        
-
                         <button type="submit" class="btn">Add to Cart</button>
                     </form>
 
                     <div class="actions">
-                        <a href="../user_buy1/{{ data.pk }}" class="buy-now">Buy Now</a>
+                        <a href="../user_buy1/{{ data.pk }}" id="buy-now" class="buy-now">Buy Now</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
-
-        // Function to update the "BUY NOW" link with the selected size
         document.getElementById('size').addEventListener('change', function() {
-            var selectedSizeId = this.value;  // Get the selected size ID
-            var buyNowLink = document.getElementById('buy-now');
-            
-            // Find the selected size name by iterating through the options
             var selectedSizeName = this.options[this.selectedIndex].text;
-    
-            // Update the 'href' of the "BUY NOW" link with the selected size
-            buyNowLink.href = "../user_buy1/{{ data.pk }}?size=" + selectedSizeName;  // Use the size name in URL
-            
-            // Optionally, display the selected size name on the page or console
-            console.log("Selected size:", selectedSizeName);  // Prints "Small", "Medium", "Large", etc.
+            document.getElementById('buy-now').href = "../user_buy1/{{ data.pk }}?size=" + encodeURIComponent(selectedSizeName);
         });
-    
-        // Trigger the update on page load (in case the user refreshes the page)
-        window.onload = function() {
-            var selectedSizeId = document.getElementById('size').value;
-            var selectedSizeName = document.getElementById('size').options[document.getElementById('size').selectedIndex].text;
-            
-            // Update the "BUY NOW" link with the selected size ID
-            document.getElementById('buy-now').href = "../user_buy1/{{ data.pk }}?size=" + selectedSizeName;  // Use the size name in URL
-            
-            // Optionally, display the selected size name on the page or console
-            console.log("Selected size on load:", selectedSizeName);  // Prints "Small", "Medium", "Large", etc.
-        };
-
     </script>
 </body>
 </html>
-

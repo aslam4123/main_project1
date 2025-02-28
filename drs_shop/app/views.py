@@ -382,6 +382,12 @@ def user_buy(request, cid):
     cart_item = get_object_or_404(Cart, id=cid, user=request.user)
     product = cart_item.product
 
+    # Retrieve the selected size from the cart item, default to 'M' if not found
+    selected_size = cart_item.size if cart_item.size else "M"  
+
+    # Debugging print to check if the size is correctly retrieved
+    print(f"Selected Size in Buy: {selected_size}")
+
     # Check if stock is available
     if cart_item.quantity > product.quantity:
         messages.error(request, f"Not enough stock available for {product.name}! Only {product.quantity} left.")
@@ -402,18 +408,14 @@ def user_buy(request, cid):
     )
 
     # Ensure quantity is not NULL
-    quantity = request.POST.get("quantity")
-    if quantity:
-        quantity = int(quantity)
-    else:
-        quantity = cart_item.quantity  # Default to cart quantity
+    quantity = cart_item.quantity
 
     # Save the order in `Buy`
-    order = Buy.objects.create(
+    buy_order = Buy.objects.create(
         user=request.user,
         product=product,
-        # size=request.POST.get("size"),
-        quantity=quantity,  # Ensure it's always set
+        size=selected_size,  # Save the selected size
+        quantity=quantity,
         price=product.ofr_price * cart_item.quantity,
         date=timezone.now()
     )
@@ -421,7 +423,7 @@ def user_buy(request, cid):
     # Remove the item from the cart after purchase
     cart_item.delete()
 
-    messages.success(request, f"Order placed successfully for {product.name}!")
+    messages.success(request, f"Order placed successfully for {product.name} (Size: {selected_size})!")
     return redirect('order')
 
 
