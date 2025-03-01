@@ -183,6 +183,13 @@
             transform: translateY(-2px);
         }
 
+        .out-of-stock {
+            color: #dc3545;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
     </style>
 </head>
 <body>
@@ -217,23 +224,29 @@
                     </div>
                     <p class="description">{{ data.dis }}</p>
 
-                    <form method="POST" action="{% url 'add_to_cart' pid=data.id %}">
-                        {% csrf_token %}
-                        <div class="custom-size-selector">
-                            <label for="size" class="selector-label">Size:</label>
-                            <select name="size" id="size" class="custom-size-select" required>
-                                <option value="" selected>Select Size</option>
-                                {% for size in data.sizes.all %}
-                                    <option value="{{ size.id }}">{{ size.size }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn">Add to Cart</button>
-                    </form>
+                    {% if data.quantity > 0 %}
+                        <!-- Show Add to Cart if Stock Available -->
+                        <form method="POST" action="{% url 'add_to_cart' pid=data.id %}">
+                            {% csrf_token %}
+                            <div class="custom-size-selector">
+                                <label for="size" class="selector-label">Size:</label>
+                                <select name="size" id="size" class="custom-size-select" required>
+                                    <option value="" selected>Select Size</option>
+                                    {% for size in data.sizes.all %}
+                                        <option value="{{ size.id }}">{{ size.size }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Add to Cart</button>
+                        </form>
 
-                    <div class="actions">
-                        <a href="../user_buy1/{{ data.pk }}" id="buy-now" class="buy-now">Buy Now</a>
-                    </div>
+                        <div class="actions">
+                            <a href="../user_buy1/{{ data.pk }}" id="buy-now" class="buy-now">Buy Now</a>
+                        </div>
+                    {% else %}
+                        <!-- Show Out of Stock if No Stock Available -->
+                        <p class="out-of-stock">Out of Stock</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

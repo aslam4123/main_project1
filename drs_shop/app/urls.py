@@ -10,7 +10,7 @@ urlpatterns=[
     path('', views.main, name='main'),
     path('',views.shp_login, name='shp_login'),
     path('shp_login1/', views.shp_login1, name='shp_login1'),
-    path('shp_logout',views.shp_logout),
+    path('shp_logout/',views.shp_logout, name='shp_logout'),
 
 
     # ---------------shop--------------------
@@ -36,6 +36,7 @@ urlpatterns=[
 
    
     path('register/', views.register, name='register'),
+    path('verify_otp_reg',views.verify_otp_reg, name='verify_otp_reg'),
     path('user_home',views.user_home ,name='user_home'),
     path('view_pro/<pid>/',views.view_pro),
     path('user_products',views.user_products),
